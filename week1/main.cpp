@@ -1,81 +1,106 @@
-#include <iostream>
-#include <functional>
+#include "Resources.hpp"
 #include <SFML/Graphics.hpp>
-#include "ball.hpp"
+#include <iostream>
 
-class action {
-private:
-	std::function< bool() > condition;
-	std::function< void() > work;
-public:
-	action(
-	   std::function< bool() > condition, 
-	   std::function< void() > work
-	) : condition( condition ), 
-		work( work ) 
-	{}
+int main(int argc, char *argv[]) {
 
-	action(
-		sf::Keyboard::Key key,
-		std::function< void() > work
-	) :
-		condition(
-			[ key ]()->bool { return sf::Keyboard::isKeyPressed( key ); }
-		),
-		work(work)
-	{}
+  sf::RenderWindow window{sf::VideoMode{1280, 960}, "SFML window"};
+  window.setFramerateLimit(60);
 
-	action(
-		sf::Mouse::Button button,
-		std::function< void() > work
-	) :
-		condition(
-			[ button ]()->bool { return sf::Mouse::isButtonPressed( button ); }
-		),
-		work(work)
-	{}
+  ball my_ball{sf::Vector2f{320.0, 240.0}};
+  my_ball.richting = sf::Vector2f{10, 10};
+  rectangle my_rec{sf::Vector2f{120.0, 140.0}, sf::Vector2f{100, 100},
+                   sf::Color::Red};
 
-	void operator()(){
-		if( condition() ){
-			work();
-		}
-	}
-};
+  rectangle topw{sf::Vector2f{0.0, 0.0}, sf::Vector2f{1280, 50},
+                 sf::Color::Magenta};
+  rectangle leftw{sf::Vector2f{0.0, 0.0}, sf::Vector2f{50, 960},
+                  sf::Color::Green};
+  rectangle bottomw{sf::Vector2f{0.0, 910.0}, sf::Vector2f{1280, 50},
+                    sf::Color::Yellow};
+  rectangle rightw{sf::Vector2f{1230.0, 0.0}, sf::Vector2f{50, 960},
+                   sf::Color::Cyan};
 
-int main( int argc, char *argv[] ){
-	std::cout << "Starting application 01-05 array of actions\n";
+  rectangle walllist[] = {topw, rightw, leftw, bottomw};
 
-	sf::RenderWindow window{ sf::VideoMode{ 640, 480 }, "SFML window" };
-	ball my_ball{ sf::Vector2f{ 320.0, 240.0 } };
+  action actions[] = {// LMAO =D=D=D=D=D=D=D=D=D=D=D=D=D
+                      action(std::function<bool()>{[]() { return true; }},
+                             [&]() { my_ball.move(my_ball.richting); }),
 
-	action actions[] = {
-		action( sf::Keyboard::Left,  [&](){ my_ball.move( sf::Vector2f( -1.0,  0.0 )); }),
-		action( sf::Keyboard::Right, [&](){ my_ball.move( sf::Vector2f( +1.0,  0.0 )); }),
-		action( sf::Keyboard::Up,    [&](){ my_ball.move( sf::Vector2f(  0.0, -1.0 )); }),
-		action( sf::Keyboard::Down,  [&](){ my_ball.move( sf::Vector2f(  0.0, +1.0 )); }),
-		action( sf::Mouse::Left,     [&](){ my_ball.jump( sf::Mouse::getPosition( window )); })
-	};
+                      action(sf::Keyboard::W,
+                             [&]() {
+                               my_rec.move(sf::Vector2f(0.0, -10.0));
+                               if (my_rec.getPos().y < 50) {
+                                 my_rec.move(sf::Vector2f(0.0, +10.0));
+                               }
+                             }),
 
-	while (window.isOpen()) {
-		for( auto & action : actions ){
-			action();
-		}
+                      action(sf::Keyboard::S,
+                             [&]() {
+                               my_rec.move(sf::Vector2f(0.0, 10.0));
+                               if (my_rec.getPos().y > 810) {
+                                 my_rec.move(sf::Vector2f(0.0, -10.0));
+                               }
+                             }),
 
-		window.clear();
-		my_ball.draw( window );
-		window.display();
+                      action(sf::Keyboard::A,
+                             [&]() {
+                               my_rec.move(sf::Vector2f(-10.0, 0.0));
+                               if (my_rec.getPos().x < 50) {
+                                 my_rec.move(sf::Vector2f(+10.0, 0.0));
+                               }
+                             }),
 
-		sf::sleep( sf::milliseconds( 1 ));
+                      action(sf::Keyboard::D,
+                             [&]() {
+                               my_rec.move(sf::Vector2f(+10.0, 0.0));
+                               if (my_rec.getPos().x > 1130) {
+                                 my_rec.move(sf::Vector2f(-10.0, 0.0));
+                               }
+                             })
 
-        sf::Event event;		
-	    while( window.pollEvent(event) ){
-			if( event.type == sf::Event::Closed ){
-				window.close();
-			}
-		}	
-	}
+  };
 
-	std::cout << "Terminating application\n";
-	return 0;
+  while (window.isOpen()) {
+    for (auto &action : actions) {
+      action();
+    }
+
+    window.clear();
+    my_ball.draw(window);
+    my_rec.draw(window);
+    for (auto i : walllist) {
+      i.draw(window);
+    };
+    window.display();
+
+    if (my_ball.intersects(my_rec.getGlobalBounds())) {
+      my_ball.richting =
+          sf::Vector2f{my_ball.richting.x * -1, my_ball.richting.y * -1};
+    }
+
+    if (my_ball.intersects(leftw.getGlobalBounds()) ||
+        my_ball.intersects(rightw.getGlobalBounds())) {
+      my_ball.richting =
+          sf::Vector2f{my_ball.richting.x * -1, my_ball.richting.y};
+    }
+
+    if (my_ball.intersects(bottomw.getGlobalBounds()) ||
+        my_ball.intersects(topw.getGlobalBounds())) {
+      my_ball.richting =
+          sf::Vector2f{my_ball.richting.x, my_ball.richting.y * -1};
+    }
+
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed) {
+        window.close();
+      }
+    }
+
+  // std::cout << " ggb: "<< my_rec.getGlobalBounds() << '\n';
+  }
+
+  std::cout << "Terminating application\n";
+  return 0;
 }
-

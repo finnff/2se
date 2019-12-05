@@ -7,9 +7,10 @@ int main(int argc, char *argv[]) {
   sf::RenderWindow window{sf::VideoMode{1280, 960}, "SFML window"};
   window.setFramerateLimit(60);
 
+  bool stuck;
   ball my_ball{sf::Vector2f{320.0, 240.0}};
   my_ball.richting = sf::Vector2f{10, 10};
-  rectangle my_rec{sf::Vector2f{120.0, 140.0}, sf::Vector2f{100, 100},
+  rectangle my_rec{sf::Vector2f{120.0, 140.0}, sf::Vector2f{110, 110},
                    sf::Color::Red};
 
   rectangle topw{sf::Vector2f{0.0, 0.0}, sf::Vector2f{1280, 50},
@@ -74,9 +75,23 @@ int main(int argc, char *argv[]) {
     };
     window.display();
 
-    if (my_ball.intersects(my_rec.getGlobalBounds())) {
-      my_ball.richting =
-          sf::Vector2f{my_ball.richting.x * -1, my_ball.richting.y * -1};
+    if (!my_ball.intersects(my_rec.getGlobalBounds())) {
+      stuck = false;
+    }
+
+    if (my_ball.intersects(my_rec.getGlobalBounds()) && stuck == false) {
+      std::cout << "BING BONG " << '\n';
+      if (abs(my_rec.getCenter().x - my_ball.Center().x) >=
+          abs(my_rec.getCenter().y - my_ball.Center().y)) {
+        my_ball.richting =
+            sf::Vector2f{my_ball.richting.x * -1, my_ball.richting.y};
+      }
+      if (abs(my_rec.getCenter().x - my_ball.Center().x) <
+          abs(my_rec.getCenter().y - my_ball.Center().y)) {
+        my_ball.richting =
+            sf::Vector2f{my_ball.richting.x, my_ball.richting.y * -1};
+      }
+      stuck = true;
     }
 
     if (my_ball.intersects(leftw.getGlobalBounds()) ||
@@ -97,8 +112,6 @@ int main(int argc, char *argv[]) {
         window.close();
       }
     }
-
-  // std::cout << " ggb: "<< my_rec.getGlobalBounds() << '\n';
   }
 
   std::cout << "Terminating application\n";

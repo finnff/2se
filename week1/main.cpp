@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     window.clear();
     my_ball.draw(window);
     my_rec.draw(window);
-    for (auto i : walllist) {
+    for (auto &i : walllist) {
       i.draw(window);
     };
     window.display();

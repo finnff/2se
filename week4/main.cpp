@@ -4,13 +4,13 @@
 #include <map>
 #include <vector>
 
-std::vector<char> readtxt(const char *filein) {
+std::vector<char> readtxt(const char *filein) { //4.1
   std::ifstream file(filein, std::ios::in);
   return std::vector<char>(std::istreambuf_iterator<char>(file),
                            std::istreambuf_iterator<char>());
 }
 
-template <typename A, typename B>
+template <typename A, typename B> //4.8
 std::multimap<B, A> flip_map(std::map<A, B> &src) {
   std::multimap<B, A> cpy;
   for (typename std::map<A, B>::const_iterator it = src.begin();
@@ -78,7 +78,7 @@ int main() {
   int amount = 0;
   for (auto &k : boost::adaptors::reverse(
            sorted)) { /// zou ook met reverse iterators kunnen en niet ranged
-                      /// based, maar dit is korted?
+                      /// based, maar dit is korter?
     std::cout << k.first << " = " << k.second << '\n';
     amount++;
     if (amount > 9) {

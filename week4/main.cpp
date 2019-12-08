@@ -1,17 +1,22 @@
-#include <algorithm>
+#include <boost/range/adaptor/reversed.hpp> //niet stl:D
 #include <fstream>
 #include <iostream>
-#include <iterator>
 #include <map>
-#include <numeric>
-#include <regex>
-#include <string>
 #include <vector>
 
 std::vector<char> readtxt(const char *filein) {
   std::ifstream file(filein, std::ios::in);
   return std::vector<char>(std::istreambuf_iterator<char>(file),
                            std::istreambuf_iterator<char>());
+}
+
+template <typename A, typename B>
+std::multimap<B, A> flip_map(std::map<A, B> &src) {
+  std::multimap<B, A> cpy;
+  for (typename std::map<A, B>::const_iterator it = src.begin();
+       it != src.end(); ++it)
+    cpy.insert(std::pair<B, A>(it->second, it->first));
+  return cpy;
 }
 
 int main() {
@@ -45,7 +50,8 @@ int main() {
   //    std::cout<<c;
   //   };
 
-  // 4.6:
+  // 4.6/4.7:
+  std::cout << '\n' << "How often each letter is used: " << '\n';
   std::map<char, int> map;
   for (auto c : bijbel) {
     map[c]++;
@@ -55,4 +61,28 @@ int main() {
       std::cout << j.first << " = " << j.second << '\n';
     }
   };
+
+  // 4.8:
+  std::cout << '\n' << "10 most common words in Bible: " << '\n';
+  std::map<std::string, int> strmap;
+  std::string word{""};
+  for (auto c : bijbel) {
+    if (isalpha(c)) {
+      word += c;
+    } else if (word.length() > 0) {
+      strmap[word]++;
+      word = "";
+    }
+  }
+  std::multimap<int, std::string> sorted = flip_map(strmap);
+  int amount = 0;
+  for (auto &k : boost::adaptors::reverse(
+           sorted)) { /// zou ook met reverse iterators kunnen en niet ranged
+                      /// based, maar dit is korted?
+    std::cout << k.first << " = " << k.second << '\n';
+    amount++;
+    if (amount > 9) {
+      break;
+    }
+  }
 }

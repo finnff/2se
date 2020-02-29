@@ -1,0 +1,22 @@
+D nice
+B nice
+C nice
+B nice
+B bruh
+D nice
+C nice
+B nice 
+A bruh
+C bruh
+B nice
+B nice
+A nice
+B nice
+D nice
+C nice 
+B nice
+B nice
+D bruh 
+A nice 
+16/20 = 
+11/15 = 7.3

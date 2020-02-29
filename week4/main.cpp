@@ -4,13 +4,13 @@
 #include <map>
 #include <vector>
 
-std::vector<char> readtxt(const char *filein) { //4.1
+std::vector<char> readtxt(const char *filein) { // 4.1
   std::ifstream file(filein, std::ios::in);
   return std::vector<char>(std::istreambuf_iterator<char>(file),
                            std::istreambuf_iterator<char>());
 }
 
-template <typename A, typename B> //4.8
+template <typename A, typename B> // 4.8
 std::multimap<B, A> flip_map(std::map<A, B> &src) {
   std::multimap<B, A> cpy;
   for (typename std::map<A, B>::const_iterator it = src.begin();
@@ -61,6 +61,16 @@ int main() {
       std::cout << j.first << " = " << j.second << '\n';
     }
   };
+
+  // 4.7:
+  std::cout<<"sorted by amount used: "<<'\n';
+
+  std::multimap<int, char> sortedchar = flip_map(map);
+  for (auto &k : boost::adaptors::reverse(sortedchar)) {
+    if (isalpha(k.second)){
+      std::cout << k.first << " = " << k.second << '\n';
+  }
+  }
 
   // 4.8:
   std::cout << '\n' << "10 most common words in Bible: " << '\n';

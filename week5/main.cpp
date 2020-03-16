@@ -1,3 +1,5 @@
+// @finff feb2020
+
 #include <SFML/Graphics.hpp>
 #include "screenitems.hpp"
 #include <vector>
@@ -20,21 +22,6 @@ void check_winner(int (&arr)[9])
     }
 }
 
-// sf::Vector2f index2coord(int index)
-// {
-//     if (index < 5)
-//     {
-//         return sf::Vector2f((index - 6) * 200, 400);
-//     }
-//     else if (index < 2)
-//     {
-//         return sf::Vector2f((index - 3) * 200, 200);
-//     }
-//     else
-//     {
-//         return sf::Vector2f((index)*200, 0);
-//     }
-// }
 
 int main()
 {
@@ -79,10 +66,10 @@ int main()
             {
                 std::cout << "\033[1;36mInvalid Input \033[0m\n";
             }
+            check_winner(positions);
         }
         gui_handler(moves, window);
         print_cli(positions);
-        check_winner(positions);
 
         while (true)
         {

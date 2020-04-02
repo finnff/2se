@@ -1,0 +1,5 @@
+(186,301) CIRCLE blue 90
+(172,400) RECTANGLE red (600,60)
+(534,382) LINE yellow (130,180)
+(587,308) CIRCLE green 25
+(457,155) PICTURE button.png

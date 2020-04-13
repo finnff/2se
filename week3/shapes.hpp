@@ -2,6 +2,8 @@
 
 #include "drawable.hpp"
 
+
+//circle class 
 class circle : public drawable
 {
 public:
@@ -25,9 +27,9 @@ public:
         window.draw(circle);
     }
 
-    void writeType(std::ostream &output) override { output << "CIRCLE "; }
+    void writeType(std::ostream &output) override { output << "circle "; }
 
-    void writeColorPlus(std::ofstream &output) override
+    void writeColorPlus(std::ofstream &output) override //writes color and its own radius to the text file.
     {
 
         writeColor(output);
@@ -37,6 +39,8 @@ public:
 private:
 };
 
+
+// rectangle class.
 class rectangle : public drawable
 {
 public:
@@ -59,15 +63,16 @@ public:
         }
         window.draw(rectangle);
     }
-    void writeType(std::ostream &output) override { output << "RECTANGLE "; }
+    void writeType(std::ostream &output) override { output << "rectangle "; }
 
-    void writeColorPlus(std::ofstream &output) override
+    void writeColorPlus(std::ofstream &output) override //writes its colour and size.
     {
         writeColor(output);
         output << "(" << size.x << "," << size.y << ")\n";
     }
 };
 
+//line class using vertex arrays https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php
 class line : public drawable
 {
 public:
@@ -100,9 +105,9 @@ public:
     }
 
 
-    void writeType(std::ostream &output) override { output << "LINE "; }
+    void writeType(std::ostream &output) override { output << "line "; }
 
-    void writeColorPlus(std::ofstream &output) override
+    void writeColorPlus(std::ofstream &output) override //writes the color of the line and the length ( is acutally more of a x + y delta?)
     {
         writeColor(output);
         output << "(" << length.x << "," << length.y << ")\n";
@@ -113,27 +118,28 @@ private:
     sf::VertexArray lines;
 };
 
+//Picture class
 class picture : public drawable
 {
 public:
     picture(sf::Vector2f position, std::string filename) : drawable(position, sf::Color::White),
                                                            filename(filename)
     {
-        texture.loadFromFile(filename);
+        texture.loadFromFile(filename); //requires image to be in same directory as rest of code.
         sprite.setTexture(texture);
         sprite.setPosition(position);
-        sprite.setScale(sf::Vector2f(0.2, 0.2));
+        sprite.setScale(sf::Vector2f(0.25, 0.25));
     }
 
     void draw(sf::RenderWindow &window) override
     {
         if (Selected)
         {
-            sprite.setColor(sf::Color(250, 50, 20, 120));
+            sprite.setColor(sf::Color(250, 50, 20, 120)); //make red and half alpha(transparancy) 
         }
         else
         {
-            sprite.setColor(sf::Color(128, 128, 128, 255));
+            sprite.setColor(sf::Color(128, 128, 128, 255)); //return to normal colours.
         }
         window.draw(sprite);
     }
@@ -154,9 +160,9 @@ public:
         position.y = target.y - rect.height / 2;
         sprite.setPosition(position);
     }
-    void writeType(std::ostream &output) override { output << "PICTURE "; }
+    void writeType(std::ostream &output) override { output << "picture "; }
 
-    void writeColorPlus(std::ofstream &output) override
+    void writeColorPlus(std::ofstream &output) override // no colour for picture needed so we only write file name.
     {
         output << filename << '\n';
     }

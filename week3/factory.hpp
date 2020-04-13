@@ -8,7 +8,9 @@
 #include <iostream>
 #include <string>
 #include <SFML/Graphics.hpp>
-
+ 
+ 
+ // ifstream operator for reading colour.
 std::ifstream &operator>>(std::ifstream &input, sf::Color &rhs)
 {
     std::string s;
@@ -39,6 +41,7 @@ std::ifstream &operator>>(std::ifstream &input, sf::Color &rhs)
     throw unknown_color(s);
 }
 
+// ifstream operator for reading position.
 std::ifstream &operator>>(std::ifstream &input, sf::Vector2f &rhs)
 {
     char c;
@@ -73,6 +76,8 @@ std::ifstream &operator>>(std::ifstream &input, sf::Vector2f &rhs)
     return input;
 }
 
+
+//object read functions that returns the specified object with the size and colour.
 std::unique_ptr<drawable> screen_object_read(std::ifstream &input)
 {
     sf::Vector2f position;

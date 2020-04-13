@@ -20,6 +20,7 @@ sf::Vector2<TO> ConvertToVector2(const sf::Vector2<FROM> &other)
 
 int main()
 {
+    // attempt to read input file, and add objects to vector
     std::vector<std::unique_ptr<drawable>> drawables;
     std::ifstream input("list.txt");
     bool errorOccurred = false;
@@ -40,6 +41,8 @@ int main()
         errorOccurred = true;
     }
 
+
+    //start sfml window to place ojects on.
     sf::RenderWindow window{sf::VideoMode{900, 600}, "SFML window"};
 
     while (window.isOpen())
@@ -47,8 +50,8 @@ int main()
         for (auto &obj : drawables)
         {
             obj->Selected = true;
-            while (true)
-            {
+            while (true) //Control loop, pressing N skips the movement turn of the highlighted object, clicking somewhere else with left mouse button moves it.
+            {    
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
                 {
                     obj->Selected = false;
@@ -71,7 +74,7 @@ int main()
                 window.display();
             }
         }
-
+        // generic sfml
         window.clear();
         for (auto &object : drawables)
         {
@@ -90,7 +93,7 @@ int main()
             }
         }
 
-        if (!errorOccurred)
+        if (!errorOccurred) // if no errors occured, write all objects and their locations into the text file.
         {
             std::ofstream output("list.txt");
             for (auto &obj : drawables)

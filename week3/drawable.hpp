@@ -3,6 +3,7 @@
 #include <fstream>
 #include <SFML/Graphics.hpp>
 
+//base drawable class that different shapes will inherit methods from.
 class drawable
 {
 public:
@@ -10,7 +11,7 @@ public:
                                                        color{color}
     {
     }
-    virtual void draw(sf::RenderWindow &window) {};
+    virtual void draw(sf::RenderWindow &window){};
 
     virtual void interact(drawable *other) {}
 
@@ -25,16 +26,12 @@ public:
             static_cast<float>(target.x),
             static_cast<float>(target.y)));
     }
-    //
-    // virtual bool selected(sf::Vector2i mouseLocation) = 0;
-
     bool Selected = false;
-
+    //write functions that will write colour/type/position and other(radius/size/image) to text file
     void writePosition(std::ostream &output) { output << "(" << position.x << "," << position.y << ") "; }
-
     virtual void writeType(std::ostream &output);
     virtual void writeColorPlus(std::ofstream &output);
-
+    // write color uses a struct to contain all availible colours objects can be.
     void writeColor(std::ostream &output)
     {
         const struct
@@ -57,10 +54,7 @@ public:
             }
         }
     }
-    virtual void writeObjectSpecificStuff(std::ostream &output){};
     sf::Vector2f position;
-
-//    virtual sf::FloatRect ggb();
 
 protected:
     sf::Color color;

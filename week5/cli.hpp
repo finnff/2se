@@ -4,6 +4,7 @@
 #include <iostream>
 
 
+//returns the Symbols seen in the CLI
 char return_char(int (&arr)[9], int index)
 {
     if (arr[index] == empty)
@@ -24,6 +25,8 @@ char return_char(int (&arr)[9], int index)
     };
 };
 
+
+// prints borders and where symbols go
 void print_cli(int (&arr)[9])
 {
     std::cout << "┌ ─ ┬ ─ ┬ ─ ┐" << '\n';

@@ -1,5 +1,5 @@
-(397,150) circle blue 90
-(436,143) rectangle red (600,60)
-(484,139) line yellow (130,180)
-(519,137) circle green 25
-(688.5,176.5) picture button.png
+(872,-15) circle blue 90
+(-423,-247) rectangle red (600,60)
+(113,-228) line yellow (130,180)
+(67,-239) circle green 25
+(-277.5,-311.5) picture button.png
